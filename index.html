@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebAR Navigation</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+
+        #qr-code {
+            margin: 20px auto;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Scan to Access WebAR Navigation</h1>
+    <canvas id="qr-code"></canvas>
+    <p>Or click <a id="ar-link" href="#" target="_blank">here</a> to open WebAR.</p>
+
+    <script>
+        var arwayLink = "https://anchor.arway.ai/map/27374daa-155b-4a46-9399-aa879f1bef07"; // Replace with your actual ARway WebAR link
+
+        var qr = new QRious({
+            element: document.getElementById('qr-code'),
+            value: arwayLink,
+            size: 200
+        });
+
+        document.getElementById('ar-link').href = arwayLink;
+    </script>
+</body>
+
+</html>
