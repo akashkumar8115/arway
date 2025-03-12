@@ -4,37 +4,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebAR Navigation</title>
+    <title>ARway Interactive Navigation</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
             padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #f5f5f5;
         }
 
         #qr-code {
             margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .instructions {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        #ar-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        #camera-view {
+            width: 100%;
+            max-width: 600px;
+            height: 400px;
+            margin: 20px auto;
+            border-radius: 10px;
+            overflow: hidden;
+            display: none;
         }
     </style>
 </head>
 
 <body>
-    <h1>Scan to Access WebAR Navigation</h1>
+    <h1>ARway Interactive Navigation</h1>
+
+    <div class="instructions">
+        <h3>Navigation Options:</h3>
+        <ol>
+            <li>Scan QR code with your phone camera</li>
+            <li>Click "Start AR Navigation" to use device camera</li>
+            <li>Follow the virtual arrows and markers</li>
+            <li>Voice guidance will assist your navigation</li>
+        </ol>
+    </div>
+
     <canvas id="qr-code"></canvas>
-    <p>Or click <a id="ar-link" href="https://webar.arway.ai/view?map=67ca8a534538516c735c6cab"
-            target="_blank">here</a> to open WebAR.</p>
+
+    <div>
+        <button id="start-ar" onclick="startARNavigation()"
+            style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 5px; margin: 10px;">
+            Start AR Navigation
+        </button>
+        <a id="ar-link" href="https://webar.arway.ai/view?map=67ca8a534538516c735c6cab" target="_blank">Open
+            in New Window</a>
+    </div>
+
+    <div id="camera-view">
+        <a-scene embedded>
+            <a-entity camera look-controls position="0 1.6 0"></a-entity>
+            <a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
+            <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E"></a-sphere>
+            <a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder>
+            <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
+        </a-scene>
+    </div>
 
     <script>
-        var arwayLink = "https://webar.arway.ai/view?map=67ca8a534538516c735c6cab"; // Replace with your actual WebAR link
-
+        // Initialize QR Code
+        var arwayLink = "https://webar.arway.ai/view?map=67ca8a534538516c735c6cab";
         var qr = new QRious({
             element: document.getElementById('qr-code'),
             value: arwayLink,
-            size: 200
+            size: 300,
+            backgroundAlpha: 0.8,
+            foreground: 'black'
         });
-
         document.getElementById('ar-link').href = arwayLink;
+
+        // AR Navigation Function
+        function startARNavigation() {
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                document.getElementById('camera-view').style.display = 'block';
+
+                // Request camera permissions and start AR experience
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(function (stream) {
+                        // AR initialization will be handled by ARway SDK
+                        window.location.href = arwayLink;
+                    })
+                    .catch(function (err) {
+                        alert('Please enable camera access for AR navigation');
+                    });
+            } else {
+                alert('AR navigation is not supported on this device');
+            }
+        }
     </script>
 </body>
 
